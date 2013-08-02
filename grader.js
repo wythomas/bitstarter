@@ -74,15 +74,18 @@ var checkUrlFile = function(inURL, checksfile) {
         console.error('Error: ' + util.format(response.message));
       }else{
         console.error("Wrote %s", csvfile);
-        fs.writeFileSync(csvfile, result);
-        uout = checkHtmlFile('csvfile.html', checksfile);
+        fs.writeFile(csvfile, result);
+        var checkJson = checkHtmlFile('csvfile.html'
+, checksfile);
+        var outJSon = JSON.stringify(checkJson,null,4);
+        console.log(outJson);
       }
     });
 //    if(uout.isEmpty){
 //      console.log('empty out');
 //    } else { console.log('not empty');
     console.log('before out', uout);
-    return uout;
+   return uout;
 };   
 
 var cheerioHtmlFile = function(htmlfile) {
@@ -111,7 +114,7 @@ var clone = function(fn) {
 };
 
 if(require.main == module) {
-console.log("main mdule");
+//console.log("main mdule");
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
@@ -120,17 +123,18 @@ console.log("main mdule");
 //    if (program.file){
 //        var checkJson = checkHtmlFile(program.file, program.checks);
 //    }
-console.log(program.url);
+//console.log(program.url);
       if (program.url != URLFILE_DEFAULT) {
          var checkUrl = checkUrlFile(program.url, program.checks);
-         var checkJson = checkHtmlFile('csvfile.html', program.checks);
+         //var checkJson = checkHtmlFile('csvfile.html', program.checks);
          // cannot get the following to work, but should work... need to revisit
          //var checkJson = checkUrlFile(program.url, program.checks);
       }else{
          var checkJson = checkHtmlFile(program.file, program.checks);
-      }
+      
     var outJson= JSON.stringify(checkJson,null,4);
     console.log(outJson);
+      }
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }   
